@@ -1,5 +1,10 @@
-run=44092709021
-build_exit=
+run=44094215397
+build_exit=0
 --- dist ---
-total 0
+total 70240
+-rw-r--r-- 1 runner runner 47715657 Nov 17 13:57 app-foss-debug.apk
+-rw-r--r-- 1 runner runner 24008424 Nov 17 13:57 app-foss-release.apk
+-rw-r--r-- 1 runner runner   193974 Nov 17 13:57 app-foss-release.apk.idsig
 --- apk outputs ---
+app/build/outputs/apk/foss/debug/app-foss-debug.apk 47715657 bytes
+app/build/outputs/apk/foss/release/app-foss-release-unsigned.apk 23935193 bytes

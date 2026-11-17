@@ -20,18 +20,18 @@ Calculating task graph as no cached configuration is available for tasks: :app:a
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preFossDebugBuild UP-TO-DATE
 > Task :app:mergeFossDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateFossDebugBuildConfig
 > Task :app:extractDebugProto
 > Task :app:extractFossDebugProto
 > Task :app:extractFossProto
 > Task :innertube:preBuild UP-TO-DATE
 > Task :innertube:preDebugBuild UP-TO-DATE
-> Task :innertube:generateDebugResources
-> Task :app:generateFossDebugBuildConfig
-> Task :innertube:processDebugNavigationResources
-> Task :innertube:javaPreCompileDebug
 > Task :app:extractProto
-> Task :innertube:packageDebugResources
+> Task :innertube:processDebugNavigationResources
+> Task :innertube:generateDebugResources
+> Task :innertube:javaPreCompileDebug
 > Task :app:generateFossDebugResValues
+> Task :innertube:packageDebugResources
 > Task :app:extractFossDebugSupportedLocales
 > Task :app:mapFossDebugSourceSetPaths
 > Task :innertube:extractDebugSupportedLocales
@@ -51,9 +51,9 @@ Calculating task graph as no cached configuration is available for tasks: :app:a
 > Task :app:compressFossDebugAssets
 > Task :app:generateFossDebugGlobalSynthetics
 > Task :app:l8DexDesugarLibFossDebug
+> Task :innertube:compileDebugKotlin
 > Task :app:checkFossDebugDuplicateClasses
 > Task :app:desugarFossDebugFileDependencies
-> Task :innertube:compileDebugKotlin
 > Task :app:mergeExtDexFossDebug
 > Task :innertube:compileDebugJavaWithJavac NO-SOURCE
 > Task :innertube:bundleLibRuntimeToJarDebug
@@ -113,7 +113,53 @@ warn: removing resource com.metrolist.music.debug:string/discord_information wit
 > Task :innertube:copyDebugJniLibsProjectOnly
 > Task :app:mergeFossDebugNativeLibs
 > Task :app:stripFossDebugDebugSymbols
-> Task :app:validateSigningFossDebug FAILED
+> Task :app:validateSigningFossDebug
+> Task :app:writeFossDebugAppMetadata
+> Task :app:writeFossDebugSigningConfigVersions
+> Task :app:preFossReleaseBuild UP-TO-DATE
+> Task :app:mergeFossReleaseJniLibFolders
+> Task :innertube:preReleaseBuild UP-TO-DATE
+> Task :innertube:mergeReleaseJniLibFolders
+> Task :innertube:mergeReleaseNativeLibs NO-SOURCE
+> Task :innertube:copyReleaseJniLibsProjectOnly
+> Task :app:mergeFossReleaseNativeLibs
+> Task :app:stripFossReleaseDebugSymbols
+> Task :app:extractFossReleaseNativeSymbolTables
+> Task :app:mergeFossReleaseNativeDebugMetadata NO-SOURCE
+> Task :innertube:prepareReleaseArtProfile
+> Task :app:mergeFossReleaseArtProfile
+> Task :app:expandFossReleaseL8ArtProfileWildcards
+> Task :innertube:generateReleaseResources FROM-CACHE
+> Task :innertube:packageReleaseResources
+> Task :innertube:processReleaseNavigationResources FROM-CACHE
+> Task :innertube:parseReleaseLocalResources FROM-CACHE
+> Task :innertube:generateReleaseRFile FROM-CACHE
+> Task :innertube:compileReleaseKotlin
+> Task :innertube:javaPreCompileRelease FROM-CACHE
+> Task :innertube:compileReleaseJavaWithJavac NO-SOURCE
+> Task :innertube:mergeReleaseGeneratedProguardFiles
+> Task :innertube:exportReleaseConsumerProguardFiles
+> Task :app:checkFossReleaseDuplicateClasses
+> Task :app:generateFossReleaseBuildConfig
+> Task :app:extractFossReleaseProto
+> Task :innertube:bundleLibRuntimeToJarRelease
+> Task :innertube:processReleaseJavaRes
+> Task :innertube:createFullJarRelease
+> Task :app:extractIncludeFossReleaseProto
+> Task :app:extractReleaseProto
+> Task :app:generateFossReleaseProto FROM-CACHE
+> Task :app:generateFossReleaseResValues
+> Task :app:extractFossReleaseSupportedLocales
+> Task :app:mapFossReleaseSourceSetPaths
+> Task :innertube:extractReleaseSupportedLocales FROM-CACHE
+> Task :app:generateFossReleaseLocaleConfig FROM-CACHE
+> Task :app:generateFossReleaseResources
+> Task :app:packageFossReleaseResources
+> Task :app:processFossReleaseNavigationResources
+> Task :app:parseFossReleaseLocalResources
+> Task :app:generateFossReleaseRFile FROM-CACHE
+> Task :innertube:bundleLibCompileToJarRelease
+> Task :app:kspFossReleaseKotlin
 
 > Task :app:compileFossDebugKotlin
 w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/eq/data/GitHubAutoEqSearch.kt:178:41 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
@@ -138,20 +184,118 @@ w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolis
 w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/utils/potoken/PoTokenWebView.kt:389:77 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/viewmodels/BackupRestoreViewModel.kt:461:45 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
 
+> Task :app:compileFossReleaseKotlin
+> Task :app:compileFossDebugJavaWithJavac
+> Task :app:processFossDebugJavaRes
+> Task :app:mergeFossDebugJavaResource
+> Task :app:hiltCollectClassesFossDebug
+> Task :app:hiltAggregateDepsFossDebug
+> Task :app:hiltJavaCompileFossDebug
+> Task :app:transformFossDebugClassesWithAsm
+> Task :app:dexBuilderFossDebug
+
+> Task :app:compileFossReleaseKotlin
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/eq/data/GitHubAutoEqSearch.kt:178:41 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/eq/data/GitHubAutoEqSearch.kt:214:41 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/player/Player.kt:679:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/player/Player.kt:1438:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/player/Queue.kt:586:29 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/AndroidAutoSettings.kt:351:29 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/AppearanceSettings.kt:451:17 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/AppearanceSettings.kt:514:17 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/AppearanceSettings.kt:750:25 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/AppearanceSettings.kt:1328:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/ContentSettings.kt:643:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/PlayerSettings.kt:331:33 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/PlayerSettings.kt:368:29 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/StorageSettings.kt:359:29 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/StorageSettings.kt:432:33 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/integrations/LastFMSettings.kt:449:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/integrations/LastFMSettings.kt:514:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/screens/settings/integrations/LastFMSettings.kt:579:21 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/ui/utils/ShowOffsetDialog.kt:204:13 'fun Slider(value: Float, onValueChange: (Float) -> Unit, modifier: Modifier = ..., enabled: Boolean = ..., valueRange: ClosedFloatingPointRange<Float> = ..., steps: Int = ..., onValueChangeFinished: (() -> Unit)? = ..., colors: SliderColors = ..., interactionSource: MutableInteractionSource = ...): Unit' is deprecated. Use the Slider overload that accepts SliderState, onValueChange, and onValueChangeFinished instead.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/utils/potoken/PoTokenWebView.kt:389:77 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///home/runner/work/Metroloop/Metroloop/app/src/main/kotlin/com/metrolist/music/viewmodels/BackupRestoreViewModel.kt:461:45 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+
+> Task :app:javaPreCompileFossRelease FROM-CACHE
+> Task :app:compileFossReleaseJavaWithJavac
+> Task :app:hiltCollectClassesFossRelease
+> Task :app:hiltAggregateDepsFossRelease FROM-CACHE
+> Task :app:hiltJavaCompileFossRelease
+> Task :innertube:writeReleaseAarMetadata
+> Task :app:checkFossReleaseAarMetadata
+> Task :app:compileFossReleaseNavigationResources FROM-CACHE
+> Task :app:mergeFossReleaseResources
+> Task :app:createFossReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksFossRelease
+> Task :innertube:extractDeepLinksRelease FROM-CACHE
+> Task :innertube:processReleaseManifest FROM-CACHE
+> Task :app:processFossReleaseMainManifest
+> Task :app:processFossReleaseManifest
+> Task :app:processFossReleaseManifestForPackage
+> Task :innertube:mapReleaseSourceSetPaths
+> Task :innertube:compileReleaseLibraryResources
+warn: removing resource com.metrolist.music:string/ai_api_key without required default value.
+warn: removing resource com.metrolist.music:string/ai_api_key_required without required default value.
+warn: removing resource com.metrolist.music:string/ai_base_url without required default value.
+warn: removing resource com.metrolist.music:string/ai_deepl_formality without required default value.
+warn: removing resource com.metrolist.music:string/ai_deepl_formality_default without required default value.
+warn: removing resource com.metrolist.music:string/ai_deepl_formality_less without required default value.
+warn: removing resource com.metrolist.music:string/ai_deepl_formality_more without required default value.
+warn: removing resource com.metrolist.music:string/ai_error_api_key_required without required default value.
+warn: removing resource com.metrolist.music:string/ai_model without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_claude_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_deepl_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_gemini_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_inception_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_mistral_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_openai_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_openrouter_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_perplexity_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_provider_xai_help without required default value.
+warn: removing resource com.metrolist.music:string/ai_setup_guide without required default value.
+warn: removing resource com.metrolist.music:string/ai_system_prompt without required default value.
+warn: removing resource com.metrolist.music:string/ai_system_prompt_default without required default value.
+warn: removing resource com.metrolist.music:string/ai_system_prompt_reset without required default value.
+warn: removing resource com.metrolist.music:string/credits_lead_developer without required default value.
+warn: removing resource com.metrolist.music:string/discord_information without required default value.
+
+> Task :app:processFossReleaseResources
+> Task :app:mergeProjectDexFossDebug
+> Task :app:packageFossDebug
+> Task :app:createFossDebugApkListingFileRedirect
+> Task :app:assembleFossDebug
+> Task :app:extractProguardFiles
+> Task :app:processFossReleaseJavaRes
+> Task :app:transformFossReleaseClassesWithAsm
+> Task :app:mergeFossReleaseJavaResource
+> Task :app:mergeFossReleaseGeneratedProguardFiles
+> Task :app:mergeFossReleaseStartupProfile
+> Task :app:expandFossReleaseArtProfileWildcards
+> Task :app:produceFossReleaseComposeMapping
+> Task :app:reportFossReleaseComposeMappingErrors
+> Task :app:generateFossReleaseAssets UP-TO-DATE
+> Task :innertube:generateReleaseAssets UP-TO-DATE
+> Task :innertube:mergeReleaseAssets
+> Task :app:mergeFossReleaseAssets
+> Task :app:compressFossReleaseAssets
+> Task :app:extractFossReleaseVersionControlInfo
+> Task :app:writeFossReleaseAppMetadata
+> Task :app:writeFossReleaseSigningConfigVersions
+> Task :app:minifyFossReleaseWithR8
+> Task :app:convertShrunkResourcesToBinaryFossRelease
+> Task :app:optimizeFossReleaseResources
+> Task :app:l8DexDesugarLibFossRelease
+> Task :app:mergeFossReleaseComposeMapping
+> Task :app:compileFossReleaseArtProfile
+> Task :app:packageFossRelease
+> Task :app:assembleFossRelease
+> Task :app:createFossReleaseApkListingFileRedirect
+
 [Incubating] Problems report is available at: file:///home/runner/work/Metroloop/Metroloop/build/reports/problems/problems-report.html
 
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:validateSigningFossDebug' (registered by plugin 'com.android.internal.application').
-> Keystore file '/home/runner/.android/debug.keystore' not found for signing config 'debug'.
-
-* Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights from a Build Scan (powered by Develocity).
-> Get more help at https://help.gradle.org.
-
-BUILD FAILED in 7m 18s
-62 actionable tasks: 61 executed, 1 up-to-date
+BUILD SUCCESSFUL in 21m 41s
+155 actionable tasks: 140 executed, 14 from cache, 1 up-to-date
 Configuration cache entry stored.
