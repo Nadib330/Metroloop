@@ -1,0 +1,105 @@
+name: MetroLoop APK Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "arena/**"
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    name: Debug + Release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build FOSS debug + release
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ./gradlew --console=plain --no-daemon \
+            :app:assembleFossDebug :app:assembleFossRelease \
+            --warning-mode summary 2>&1 | tee build.log
+          echo "exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Collect diagnostics
+        if: always()
+        run: |
+          {
+            echo "### Build exit code: \`${{ steps.build.outputs.exit }}\`"
+            echo '```text'
+            grep -E "^(e: |FAILURE:|BUILD SUCCESSFUL|BUILD FAILED|> Task .*FAILED|\* What went wrong:|\* Try:|Caused by:)" build.log | tail -n 120 || true
+            echo '--- tail ---'
+            tail -c 5000 build.log || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Sign release APK with a throwaway key
+        if: always()
+        run: |
+          set -euo pipefail
+          UNSIGNED=$(ls app/build/outputs/apk/foss/release/*-unsigned.apk 2>/dev/null | head -1 || true)
+          if [ -z "${UNSIGNED}" ]; then
+            echo "No unsigned release APK produced, skipping signing"
+            exit 0
+          fi
+          BT=$(ls -d "${ANDROID_SDK_ROOT}"/build-tools/* | sort -V | tail -1)
+          echo "Using build-tools: $BT"
+          keytool -genkeypair -keystore metroloop.jks -storepass metroloop -keypass metroloop \
+            -alias metroloop -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=MetroLoop, O=rpooi3 studio, C=BD" >/dev/null 2>&1
+          mkdir -p dist
+          "$BT/zipalign" -f -p 4 "$UNSIGNED" dist/release-aligned.apk
+          "$BT/apksigner" sign --ks metroloop.jks --ks-pass pass:metroloop \
+            --key-pass pass:metroloop --v1-signing-enabled true --v2-signing-enabled true \
+            --out dist/app-foss-release.apk dist/release-aligned.apk
+          rm -f dist/release-aligned.apk
+          echo "Signed release APK:"
+          ls -l dist
+
+      - name: Collect debug APK
+        if: always()
+        run: |
+          mkdir -p dist
+          find app/build/outputs/apk/foss/debug -name "*.apk" -exec cp {} dist/ \; 2>/dev/null || true
+          ls -l dist
+
+      - name: Upload APKs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metroloop-apks
+          path: dist/*.apk
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metroloop-build-log
+          path: build.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Fail if the Gradle build failed
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "Gradle build failed, see the diagnostics above."
+          exit 1

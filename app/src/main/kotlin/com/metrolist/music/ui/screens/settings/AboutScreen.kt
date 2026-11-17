@@ -25,8 +25,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,6 +62,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.RoundedPolygon
@@ -82,7 +81,6 @@ import com.metrolist.music.ui.component.Material3SettingsItem
 import com.metrolist.music.ui.utils.backToMain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 private data class Contributor(
     val name: String,
@@ -101,17 +99,23 @@ private data class CommunityLink(
     val url: String
 )
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-private val leadDeveloper = Contributor(
-    name = "Mo Agamy",
-    roleRes = R.string.credits_lead_developer,
-    githubHandle = "mostafaalagamy",
-    polygon = MaterialShapes.Cookie9Sided,
-    favoriteSongVideoId = "Mh2JWGWvy_Y"
-)
+// MetroLoop maintainer details. Update the handle here when the project moves.
+private const val MAINTAINER_GITHUB_HANDLE = "rpooi3"
+
+private const val UPSTREAM_METROLIST_REPO = "https://github.com/MetrolistGroup/Metrolist"
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-private val collaborators = listOf(
+private val maintainer = Contributor(
+    name = "rpooi3 studio",
+    roleRes = R.string.credits_maintainer,
+    githubHandle = MAINTAINER_GITHUB_HANDLE,
+    polygon = MaterialShapes.Cookie9Sided,
+)
+
+// The people who built Metrolist, the project MetroLoop is forked from.
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private val originalAuthors = listOf(
+    Contributor(name = "Mo Agamy", roleRes = R.string.credits_original_author, githubHandle = "mostafaalagamy", polygon = MaterialShapes.Cookie9Sided, favoriteSongVideoId = "Mh2JWGWvy_Y"),
     Contributor(name = "Adriel O'Connel", roleRes = R.string.credits_collaborator, githubHandle = "adrielGGmotion", sponsorUrl = "https://github.com/sponsors/adrielGGmotion", polygon = MaterialShapes.Cookie4Sided, favoriteSongVideoId = "m2zUrruKjDQ"),
     Contributor(name = "Nyx", roleRes = R.string.credits_collaborator, githubHandle = "nyxiereal", sponsorUrl = "https://github.com/sponsors/nyxiereal", polygon = MaterialShapes.Cookie12Sided, favoriteSongVideoId = "zselaN6zPXw"),
 )
@@ -119,8 +123,8 @@ private val collaborators = listOf(
 private val communityLinks = listOf(
     CommunityLink(R.string.credits_discord, R.drawable.discord, "https://discord.com/invite/zrdbeRG2Mt"),
     CommunityLink(R.string.credits_telegram, R.drawable.telegram, "https://t.me/metrolistapp"),
-    CommunityLink(R.string.credits_view_repo, R.drawable.github, "https://github.com/MetrolistGroup/Metrolist"),
-    CommunityLink(R.string.credits_license_name, R.drawable.info, "https://github.com/MetrolistGroup/Metrolist/blob/main/LICENSE")
+    CommunityLink(R.string.credits_view_original_repo, R.drawable.github, UPSTREAM_METROLIST_REPO),
+    CommunityLink(R.string.credits_license_name, R.drawable.info, "$UPSTREAM_METROLIST_REPO/blob/main/LICENSE")
 )
 
 private fun handleEasterEggClick(
@@ -184,29 +188,20 @@ private fun ContributorAvatar(
 
 @Composable
 private fun DeveloperSocials(
-    uriHandler: androidx.compose.ui.platform.UriHandler
+    uriHandler: androidx.compose.ui.platform.UriHandler,
+    githubUrl: String,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         FilledTonalButton(
-            onClick = { uriHandler.openUri("https://metrolist.cc") },
-            modifier = Modifier.weight(1f).height(48.dp)
-        ) {
-            Icon(painterResource(R.drawable.language), contentDescription = null)
-        }
-        FilledTonalButton(
-            onClick = { uriHandler.openUri("https://github.com/mostafaalagamy") },
+            onClick = { uriHandler.openUri(githubUrl) },
             modifier = Modifier.weight(1f).height(48.dp)
         ) {
             Icon(painterResource(R.drawable.github), contentDescription = null)
-        }
-        FilledTonalButton(
-            onClick = { uriHandler.openUri("https://www.instagram.com/mostafaalagamy") },
-            modifier = Modifier.weight(1f).height(48.dp)
-        ) {
-            Icon(painterResource(R.drawable.instagram), contentDescription = null)
+            Spacer(Modifier.width(12.dp))
+            Text(stringResource(R.string.credits_github_profile), fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -254,7 +249,7 @@ fun AboutScreen(
             ) {
                 Image(
                     painter = painterResource(R.drawable.small_icon),
-                    contentDescription = stringResource(R.string.metrolist),
+                    contentDescription = stringResource(R.string.app_name),
                     colorFilter = ColorFilter.tint(
                         color = MaterialTheme.colorScheme.primary,
                         blendMode = BlendMode.SrcIn,
@@ -265,12 +260,8 @@ fun AboutScreen(
                 Spacer(Modifier.width(20.dp))
         
                 Column {
-                    val metrolistName = stringResource(R.string.metrolist)
-                        .lowercase(Locale.getDefault())
-                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-
                     Text(
-                        text = metrolistName,
+                        text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -329,7 +320,7 @@ fun AboutScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // Lead Developer Hero Card
+        // Maintainer hero card
         ElevatedCard(
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier.fillMaxWidth()
@@ -342,32 +333,18 @@ fun AboutScreen(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    var leadClickCount by remember(leadDeveloper.name) { mutableIntStateOf(0) }
-            
                     ContributorAvatar(
-                        avatarUrl = leadDeveloper.avatarUrl,
+                        avatarUrl = maintainer.avatarUrl,
                         sizeDp = 110,
-                        shape = leadDeveloper.polygon?.toShape() ?: CircleShape,
-                        contentDescription = leadDeveloper.name,
-                        onClick = {
-                            handleEasterEggClick(
-                                clickCount = leadClickCount,
-                                favoriteSongVideoId = leadDeveloper.favoriteSongVideoId,
-                                coroutineScope = coroutineScope,
-                                snackbarHostState = snackbarHostState,
-                                playerConnection = playerConnection,
-                                wannaPlayStr = wannaPlayStr,
-                                yeahStr = yeahStr,
-                                onCountUpdate = { leadClickCount = it }
-                            )
-                        }
+                        shape = maintainer.polygon?.toShape() ?: CircleShape,
+                        contentDescription = maintainer.name,
                     )
 
                     Column(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = leadDeveloper.name,
+                            text = maintainer.name,
                             style = MaterialTheme.typography.headlineLarge,
                             fontWeight = FontWeight.Black,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -375,42 +352,39 @@ fun AboutScreen(
                             letterSpacing = (-0.5).sp
                         )
                         Text(
-                            text = stringResource(R.string.credits_lead_developer),
+                            text = stringResource(R.string.credits_maintainer),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
                 }
-                
+
                 Spacer(Modifier.height(24.dp))
-                
-                DeveloperSocials(uriHandler)
-                
-                Spacer(Modifier.height(16.dp))
-                
-                Button(
-                    onClick = { uriHandler.openUri("https://buymeacoffee.com/mostafaalagamy") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                ) {
-                    Icon(painterResource(R.drawable.buymeacoffee), contentDescription = null, modifier = Modifier.size(20.dp))
-                    Spacer(Modifier.width(12.dp))
-                    Text(stringResource(R.string.buy_mo_a_coffee), fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                }
+
+                DeveloperSocials(uriHandler, maintainer.githubUrl)
             }
         }
 
+        Spacer(Modifier.height(12.dp))
+
+        // Attribution to the project this fork is based on
+        Text(
+            text = stringResource(R.string.credits_original_attribution),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
+
         Spacer(Modifier.height(32.dp))
-        
-        // Collaborators section - back to Material3SettingsGroup
+
+        // Original Metrolist authors
         Material3SettingsGroup(
-            title = stringResource(R.string.credits_collaborators_section),
-            items = collaborators.map { contributor ->
+            title = stringResource(R.string.credits_original_developers_section),
+            items = originalAuthors.map { contributor ->
                 Material3SettingsItem(
                     leadingContent = {
                         var clickCount by remember(contributor.name) { mutableIntStateOf(0) }
@@ -467,7 +441,19 @@ fun AboutScreen(
                     },
                     onClick = { uriHandler.openUri(contributor.githubUrl) }
                 )
-            }
+            } + listOf(
+                Material3SettingsItem(
+                    icon = painterResource(R.drawable.buymeacoffee),
+                    title = {
+                        Text(
+                            text = stringResource(R.string.credits_support_original_author),
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    },
+                    description = { Text(stringResource(R.string.buy_mo_a_coffee)) },
+                    onClick = { uriHandler.openUri("https://buymeacoffee.com/mostafaalagamy") },
+                ),
+            )
         )
 
         Spacer(Modifier.height(32.dp))
