@@ -67,19 +67,28 @@ jobs:
       - name: Publish build log and APKs back to the branch
         if: always()
         run: |
-          set -euo pipefail
+          set -uo pipefail
           mkdir -p .ci
           {
             echo "run=${GITHUB_RUN_ID}"
             echo "build_exit=${{ steps.build.outputs.exit }}"
-            echo "deadline=60m"
+            echo "--- dist ---"
+            ls -l dist 2>/dev/null || true
+            echo "--- apk outputs ---"
+            find app/build/outputs/apk -name "*.apk" -printf "%p %s bytes\n" 2>/dev/null || true
           } > .ci/status.txt
-          cp build.log .ci/build.log 2>/dev/null || true
+          if [ -f build.log ]; then cp build.log .ci/build.log; fi
+
           git config user.name "MetroLoop CI"
           git config user.email "ci@users.noreply.github.com"
-          git add -f .ci/status.txt .ci/build.log dist/*.apk 2>/dev/null || true
+          git add -f .ci/status.txt
+          if [ -f .ci/build.log ]; then git add -f .ci/build.log; fi
+          for f in dist/*.apk; do
+            if [ -f "$f" ]; then git add -f "$f"; fi
+          done
+          git status --short | head -20
           git commit -m "ci: build output for run ${GITHUB_RUN_ID}" || echo "nothing to commit"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}" || git push --force origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Upload APKs
         if: always()
