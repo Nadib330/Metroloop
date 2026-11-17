@@ -2,12 +2,9 @@ name: MetroLoop APK Build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "arena/**"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   apk:
@@ -38,18 +35,6 @@ jobs:
             --warning-mode summary 2>&1 | tee build.log
           echo "exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
 
-      - name: Collect diagnostics
-        if: always()
-        run: |
-          {
-            echo "### Build exit code: \`${{ steps.build.outputs.exit }}\`"
-            echo '```text'
-            grep -E "^(e: |FAILURE:|BUILD SUCCESSFUL|BUILD FAILED|> Task .*FAILED|\* What went wrong:|\* Try:|Caused by:)" build.log | tail -n 120 || true
-            echo '--- tail ---'
-            tail -c 5000 build.log || true
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-
       - name: Sign release APK with a throwaway key
         if: always()
         run: |
@@ -70,15 +55,31 @@ jobs:
             --key-pass pass:metroloop --v1-signing-enabled true --v2-signing-enabled true \
             --out dist/app-foss-release.apk dist/release-aligned.apk
           rm -f dist/release-aligned.apk
-          echo "Signed release APK:"
           ls -l dist
 
-      - name: Collect debug APK
+      - name: Collect debug APKs
         if: always()
         run: |
           mkdir -p dist
-          find app/build/outputs/apk/foss/debug -name "*.apk" -exec cp {} dist/ \; 2>/dev/null || true
+          find app/build/outputs/apk -name "*debug*.apk" -exec cp {} dist/ \; 2>/dev/null || true
           ls -l dist
+
+      - name: Publish build log and APKs back to the branch
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p .ci
+          {
+            echo "run=${GITHUB_RUN_ID}"
+            echo "build_exit=${{ steps.build.outputs.exit }}"
+            echo "deadline=60m"
+          } > .ci/status.txt
+          cp build.log .ci/build.log 2>/dev/null || true
+          git config user.name "MetroLoop CI"
+          git config user.email "ci@users.noreply.github.com"
+          git add -f .ci/status.txt .ci/build.log dist/*.apk 2>/dev/null || true
+          git commit -m "ci: build output for run ${GITHUB_RUN_ID}" || echo "nothing to commit"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Upload APKs
         if: always()
@@ -89,17 +90,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Upload build log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: metroloop-build-log
-          path: build.log
-          if-no-files-found: warn
-          retention-days: 14
-
       - name: Fail if the Gradle build failed
         if: steps.build.outcome == 'failure'
         run: |
-          echo "Gradle build failed, see the diagnostics above."
+          echo "Gradle build failed; see .ci/build.log on the branch."
           exit 1
