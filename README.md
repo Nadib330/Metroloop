@@ -1,5 +1,4 @@
 ‎# MetroLoop
-‎
 
 ‎<div align="center">
 ‎
@@ -12,7 +11,10 @@
 ‎<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_5.png" alt="Player screen" width="30%" />
 ‎<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_6.png" alt="Player lyrics screen" width="30%" />
 ‎‎</div>
+
+
 ‎---
+
 ‎A music client for YouTube Music, based on Metrolist 13
 ‎
 ‎MetroLoop is an independently developed project built on the Metrolist 13 codebase. It follows its own development direction and does not aim to synchronize with the upstream project.MetroLoop is an independently developed project built on the Metrolist 13 codebase. It follows its own development direction and does not aim to synchronize with the upstream project.
