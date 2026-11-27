@@ -2,6 +2,8 @@
 
 <div align="center">
 
+<img src="fastlane/metadata/android/en-US/images/svgviewer-png-output.png" alt="MetroLoop app icon" width="160" />
+
 <h2 id="screenshots">Screenshots</h2>
 
 <img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_1.png" alt="Home screen" width="30%" />
