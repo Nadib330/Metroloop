@@ -7,7 +7,7 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 
-val baseApplicationId = "com.metrolist.music"
+val baseApplicationId = "com.rpooi3.metroloop"
 val applicationIdOverride = System.getenv("METROLIST_APPLICATION_ID")?.takeIf { it.isNotBlank() }
 val appNameOverride = System.getenv("METROLIST_APP_NAME")?.takeIf { it.isNotBlank() }
 val buildCommit =
@@ -33,19 +33,19 @@ plugins {
 }
 
 android {
-    namespace = "com.metrolist.music"
+    namespace = "com.rpooi3.metroloop"
     compileSdk = 37
 
     defaultConfig {
         applicationId = applicationIdOverride ?: baseApplicationId
         minSdk = 26
         targetSdk = 36
-        versionCode = 153
-        versionName = "13.7.0"
+        versionCode = 3
+        versionName = "1.3.7"
         val baseVersionName = requireNotNull(versionName)
         buildConfigField("String", "BASE_VERSION_NAME", "\"$baseVersionName\"")
         buildCommit?.let { versionName = "$baseVersionName+$it" }
-        resValue("string", "app_name", appNameOverride ?: "MetroLoop")
+        resValue("string", "app_name", appNameOverride ?: "Metroloop")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -66,26 +66,23 @@ android {
 
     flavorDimensions += listOf("variant")
     productFlavors {
-        // FOSS - Updater, but no gcast
+        // FOSS - no gcast
         create("foss") {
             dimension = "variant"
             isDefault = true
             buildConfigField("Boolean", "CAST_AVAILABLE", "false")
-            buildConfigField("Boolean", "UPDATER_AVAILABLE", "true")
         }
 
-        // GMS - Updater and gcast
+        // GMS - gcast
         create("gms") {
             dimension = "variant"
             buildConfigField("Boolean", "CAST_AVAILABLE", "true")
-            buildConfigField("Boolean", "UPDATER_AVAILABLE", "true")
         }
 
-        // IzzyOnDroid - no gcast, no updater - the ONLY F-droid compliant build
+        // IzzyOnDroid - no gcast - the ONLY F-droid compliant build
         create("izzy") {
             dimension = "variant"
             buildConfigField("Boolean", "CAST_AVAILABLE", "false")
-            buildConfigField("Boolean", "UPDATER_AVAILABLE", "false")
         }
     }
 
@@ -126,6 +123,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // Sign the release build only when credentials are provided via
+            // STORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD env vars and the
+            // release keystore exists. Otherwise an unsigned APK is produced
+            // (same behavior as upstream Metrolist; F-Droid / CI re-sign).
+            if (!System.getenv("STORE_PASSWORD").isNullOrBlank() && file("keystore/release.keystore").exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         debug {
             if (applicationIdOverride == null) {
@@ -133,7 +137,7 @@ android {
             }
             isDebuggable = true
             if (appNameOverride == null) {
-                resValue("string", "app_name", "MetroLoop Debug")
+                resValue("string", "app_name", "Metroloop Debug")
             }
             signingConfig =
                 if (workflowDebugKeystoreFile != null) {
